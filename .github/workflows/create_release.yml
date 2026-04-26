@@ -171,7 +171,10 @@ jobs:
         working-directory: ${{ steps.download-files.outputs.OUTPUT_NAME }}
         run: |
           cyan -i "${GITHUB_WORKSPACE}/Apollo.ipa" -o "Payload/Apollo.app" -f "${GITHUB_WORKSPACE}/improvedcustomapi.deb" --fakesign
-          
+
+          # Apply Dystopia patches (URL scheme + App Group fix)
+          bash "${GITHUB_WORKSPACE}/dystopia-patch.sh"
+
           # Update CFBundleVersion in Info.plist to match ICA version
           echo "Updating CFBundleVersion to ${ICA_VERSION}"
           # Check if key exists, add or set accordingly
@@ -180,11 +183,11 @@ jobs:
           else
             /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
           fi
-          
+
           # Verify the change
           BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "Payload/Apollo.app/Info.plist")
           echo "CFBundleVersion is now: ${BUILD_VERSION}"
-          
+
           echo "Zipping ${OUTPUT_NAME}.ipa"
           zip -6 -rq "${OUTPUT_NAME}.ipa" "Payload" -x "*/.*"
 
@@ -204,6 +207,10 @@ jobs:
 
           echo "Fake Signing Apollo Executable!"
           ldid -S -M "Payload/Apollo.app/Apollo"
+
+          # Re-apply App Group fix after ldid re-signed
+          bash "${GITHUB_WORKSPACE}/dystopia-patch.sh"
+
           echo "Zipping GLASS_${OUTPUT_NAME}.ipa"
           zip -6 -rq "GLASS_${OUTPUT_NAME}.ipa" "Payload" -x "*/.*"
 
@@ -214,7 +221,10 @@ jobs:
         working-directory: NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}
         run: |
           cyan -i "${GITHUB_WORKSPACE}/Apollo.ipa" -o "Payload/Apollo.app" -f "${GITHUB_WORKSPACE}/improvedcustomapi.deb" --fakesign -e
-          
+
+          # Apply Dystopia patches (URL scheme + App Group fix)
+          bash "${GITHUB_WORKSPACE}/dystopia-patch.sh"
+
           # Update CFBundleVersion in Info.plist to match ICA version
           echo "Updating CFBundleVersion to ${ICA_VERSION}"
           # Check if key exists, add or set accordingly
@@ -223,11 +233,11 @@ jobs:
           else
             /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
           fi
-          
+
           # Verify the change
           BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "Payload/Apollo.app/Info.plist")
           echo "CFBundleVersion is now: ${BUILD_VERSION}"
-          
+
           echo "Zipping NO-EXTENSIONS_${OUTPUT_NAME}.ipa"
           zip -6 -rq "NO-EXTENSIONS_${OUTPUT_NAME}.ipa" "Payload" -x "*/.*"
 
@@ -247,6 +257,10 @@ jobs:
 
           echo "Fake Signing Apollo Executable!"
           ldid -S -M "Payload/Apollo.app/Apollo"
+
+          # Re-apply App Group fix after ldid re-signed
+          bash "${GITHUB_WORKSPACE}/dystopia-patch.sh"
+
           echo "Zipping NO-EXTENSIONS_GLASS_${OUTPUT_NAME}.ipa"
           zip -6 -rq "NO-EXTENSIONS_GLASS_${OUTPUT_NAME}.ipa" "Payload" -x "*/.*"
 
