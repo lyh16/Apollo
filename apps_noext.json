@@ -1,12 +1,12 @@
 {
   "name": "Apollo for Reddit - No Extensions",
   "subtitle": "Apollo for Reddit unofficial AltStore source without extensions.",
-  "description": "This is an unofficial AltStore source for Apollo for Reddit tweaked with ImprovedCustomApi by @JeffreyCA.\n\nThis is the NO EXTENSIONS version - Apollo injected with ImprovedCustomApi and removed extensions. Uses fewer App IDs (1 vs 7) - ideal for free Apple Developer accounts.\n\nFor full details, check the GitHub repository:\nhttps://github.com/Balackburn/Apollo",
-  "iconURL": "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_0.webp",
-  "website": "https://balackburn.github.io/Apollo",
+  "description": "Fork of Balackburn/Apollo with Dystopia URL scheme and SideStore App Group fix pre-applied.\n\nThis is the NO EXTENSIONS version - removed extensions, uses fewer App IDs (1 vs 7). Ideal for free Apple Developer accounts.\n\nFor full details, check the GitHub repository:\nhttps://github.com/lyh16/Apollo",
+  "iconURL": "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_0.webp",
+  "website": "https://lyh16.github.io/Apollo",
   "tintColor": "#4453f4",
   "featuredApps": [],
-  "headerURL": "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/header/altstore_header.png",
+  "headerURL": "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/header/altstore_header.png",
   "apps": [
     {
       "name": "Apollo for Reddit - No Extensions",
@@ -14,18 +14,18 @@
       "developerName": "Christian Selig (& JeffreyCA)",
       "subtitle": "The award-winning Reddit app",
       "localizedDescription": "Apollo is an app for Reddit built for customizability, smoothness, gestures, and taking advantage of everything iOS has to offer. Apollo is a beautiful Reddit app built for fast navigation with an incredibly powerful set of features. Thanks to features like the Jump Bar, fully customizable gestures, and a super-charged Media Viewer, browsing Reddit has never been this amazing. It's created specifically with iOS design guidelines in mind, so it fits right at home on your device, and with input from thousands of Redditors helping sculpt and perfect it over several years before launching:\n\n• Jump Bar, for super-fast hopping between subreddits\n• Super-charged Media Viewer for an amazing experience viewing images, GIFs, videos, albums, and more from a variety of sources.\n• Tabbed interface for easy navigating\n• Incredibly powerful Markdown composer for writing comments and posts\n• Full inline Imgur uploading, both images and albums\n• Large or compact posts depending on your preference\n• Dark mode (can be automatic)\n• Fully customizable gestures\n• Safari View Controller for browsing articles and links\n• Inline previews of media in comments\n• 3D Touch support\n• Beautifully organized Inbox\n• Filtering and blocking\n• Face ID / Touch ID / Passcode lock\n• Moderator features\n• Tons of settings to tweak\n• GIF scrubbing to go backward and forward in time\n• Multiple accounts\n• Powerful search\n• Full Markdown rendering\n• Unobtrusive Volume Indicator\n\nAs well as much, much more and it's constantly evolving. If you have anything you'd specifically like to see, come to the ApolloApp subreddit and we'd love to hear it! Apollo is an unofficial app, and side effects may include an incredible browsing experience.",
-      "iconURL": "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_0.webp",
+      "iconURL": "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_0.webp",
       "tintColor": "#4453f4",
       "category": "social",
       "screenshots": [
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_1.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_2.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_3.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_4.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_5.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_6.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_7.webp",
-        "https://raw.githubusercontent.com/Balackburn/Apollo/main/images/image_8.webp"
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_1.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_2.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_3.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_4.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_5.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_6.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_7.webp",
+        "https://raw.githubusercontent.com/lyh16/Apollo/main/public/images/image_8.webp"
       ],
       "versions": [
         {
@@ -73,7 +73,7 @@
       "caption": "Update for ImprovedCustomApi now available!",
       "date": "2026-04-26T13:13:23Z",
       "tintColor": "#3F91FE",
-      "imageURL": "https://raw.githubusercontent.com/Balackburn/Apollo/refs/heads/main/images/news/news_2.png",
+      "imageURL": "https://raw.githubusercontent.com/lyh16/Apollo/refs/heads/main/public/images/news/news_2.png",
       "notify": true,
       "url": "https://github.com/lyh16/Apollo/releases/tag/v1.15.11_2.4.0"
     }

@@ -6,21 +6,38 @@
 ![Release](https://img.shields.io/github/downloads/lyh16/Apollo/total)
 ![GitHub issues](https://img.shields.io/github/issues-raw/lyh16/Apollo)
 
-# Apollo for Reddit with ImprovedCustomAPI
+# Apollo for Reddit with ImprovedCustomAPI (Dystopia Fork)
 
-This AltStore source provides pre-built releases of [Apollo App (Christian Selig)](https://apolloapp.io/) injected with [ImprovedCustomApi (JeffreyCA)](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi).
+This is a fork of [Balackburn/Apollo](https://github.com/Balackburn/Apollo) with additional patches applied automatically during the build:
 
-It uses version `1.15.11` of the app and the latest release of the tweak.
+### What this fork adds
 
-Before raising any issues, please check the [ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi/issues) repo first - as this source only integrates it.
+1. **Dystopia URL scheme** — Injects `dystopia` into `CFBundleURLSchemes` so iOS routes the `dystopia://response` OAuth callback to Apollo, enabling the [free API spoof](https://github.com/wchill/patcheddit) without manually editing the IPA.
+2. **App Group capitalization fix** — Changes `group.com.christianselig.apollo` to `group.com.christianselig.Apollo` (capital A) in binary entitlements, fixing SideStore error 3014 caused by a case mismatch with the Apple Developer Portal.
+
+After installing, you still need to enter these in Apollo > Settings > General > Custom API:
+
+| Setting | Value |
+|---------|-------|
+| Reddit API Key | *(your Dystopia App ID from the Reddit email)* |
+| Redirect URI | `dystopia://response` |
+| User Agent | `ios:com.CarbonDev.Dystopia:v1.0.1(by u/DystopiaForReddit)` |
+
+For the full setup walkthrough, see [this guide](https://www.reddit.com/r/apollosideloaded/comments/1r864m7/) by [u/Ill-Economist-5285](https://www.reddit.com/user/Ill-Economist-5285) on [r/apollosideloaded](https://www.reddit.com/r/apollosideloaded/), based on [patcheddit](https://github.com/wchill/patcheddit).
+
+### Upstream
+
+This source tracks [JeffreyCA/Apollo-ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi) releases automatically every 6 hours. It uses version `1.15.11` of the app and the latest release of the tweak.
+
+Before raising any issues, please check the [ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi/issues) repo first — this source only integrates it.
 
 ## Available Sources
 
 | Version | Best For | Features |
 |---------|----------|----------|
-| **Standard** | Most users | Apollo injected with ImprovedCustomApi |
-| **No Extensions** | Free Apple Developer accounts | Apollo injected with ImprovedCustomApi and removed extensions - Uses fewer App IDs (1 vs 7) |
-| **GLASS** | iOS 26+ users | Apollo injected with ImprovedCustomApi and Liquid Glass UI Patch (iOS 26+) |
+| **Standard** | Most users | Apollo + ImprovedCustomApi + Dystopia spoof + App Group fix |
+| **No Extensions** | Free Apple Developer accounts | Same as Standard with removed extensions — uses fewer App IDs (1 vs 7) |
+| **GLASS** | iOS 26+ users | Same as Standard with Liquid Glass UI Patch (iOS 26+) |
 | **No Extensions + LIQUID GLASS** | iOS 26 + Free accounts | Combines both options |
 
 ## Standard Source
