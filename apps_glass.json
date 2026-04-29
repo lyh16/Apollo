@@ -30,6 +30,14 @@
       "versions": [
         {
           "version": "1.15.11",
+          "buildVersion": "2.5.0",
+          "date": "2026-04-29T08:04:50Z",
+          "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.5.0\"\n\nRelease Notes\n• New bulk translation feature for comment threads and self posts (thanks @icpryde for implementing this feature!) (140)\r\n    • When enabled, loaded comments are translated in•place. Configure in Settings > Translation\r\n    • Adds a per•thread globe toggle to switch between translated and original text in comments view\r\n    • Supports both Google and LibreTranslate, with custom LibreTranslate URL and API key\r\n    • Translations persist in place while voting, collapsing and expanding comments, opening previews, scrolling, and refreshing the thread\r\n    • Preserves links while translated and leaves code or preformatted content untranslated\r\n\r\n| | |\r\n|:••:|:••:|\r\n|  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+          "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.5.0/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.5.0.ipa",
+          "size": 114929843
+        },
+        {
+          "version": "1.15.11",
           "buildVersion": "2.4.0",
           "date": "2026-04-26T13:13:23Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.4.0\"\n\nRelease Notes\n• Add option to proxy Imgur images through DuckDuckGo for regional blocks (138)\r\n    • Enable in Settings > General > Custom API > Media\r\n    • Only supports viewing single images; albums are not supported\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
@@ -58,14 +66,25 @@
         }
       },
       "version": "1.15.11",
-      "buildVersion": "2.4.0",
-      "versionDate": "2026-04-26T13:13:23Z",
-      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.4.0\"\n\nRelease Notes\n• Add option to proxy Imgur images through DuckDuckGo for regional blocks (138)\r\n    • Enable in Settings > General > Custom API > Media\r\n    • Only supports viewing single images; albums are not supported\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
-      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.4.0/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.4.0.ipa",
-      "size": 114885893
+      "buildVersion": "2.5.0",
+      "versionDate": "2026-04-29T08:04:50Z",
+      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.5.0\"\n\nRelease Notes\n• New bulk translation feature for comment threads and self posts (thanks @icpryde for implementing this feature!) (140)\r\n    • When enabled, loaded comments are translated in•place. Configure in Settings > Translation\r\n    • Adds a per•thread globe toggle to switch between translated and original text in comments view\r\n    • Supports both Google and LibreTranslate, with custom LibreTranslate URL and API key\r\n    • Translations persist in place while voting, collapsing and expanding comments, opening previews, scrolling, and refreshing the thread\r\n    • Preserves links while translated and leaves code or preformatted content untranslated\r\n\r\n| | |\r\n|:••:|:••:|\r\n|  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.5.0/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.5.0.ipa",
+      "size": 114929843
     }
   ],
   "news": [
+    {
+      "appID": "com.christianselig.Apollo",
+      "title": "1.15.11_2.5.0 - 29 Apr",
+      "identifier": "release-1.15.11_2.5.0",
+      "caption": "Update for ImprovedCustomApi now available!",
+      "date": "2026-04-29T08:04:50Z",
+      "tintColor": "#3F91FE",
+      "imageURL": "https://raw.githubusercontent.com/lyh16/Apollo/refs/heads/main/public/images/news/news_2.png",
+      "notify": true,
+      "url": "https://github.com/lyh16/Apollo/releases/tag/v1.15.11_2.5.0"
+    },
     {
       "appID": "com.christianselig.Apollo",
       "title": "1.15.11_2.4.0 - 26 Apr",
