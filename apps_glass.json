@@ -30,6 +30,14 @@
       "versions": [
         {
           "version": "1.15.11",
+          "buildVersion": "2.7.0",
+          "date": "2026-05-06T08:12:34Z",
+          "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.0\"\n\nRelease Notes\n• New Tag Filters feature to blur NSFW and/or Spoiler posts (including titles) in feeds (thanks @icpryde for implementing this!)\r\n    • Configure in Settings > Tag Filters\r\n    • Tap a blurred post for a \"View hidden post?\" confirmation alert\r\n    • Per•subreddit overrides let you toggle NSFW or Spoiler filtering for individual subreddits\r\n• Bulk translation fixes (thanks @icpryde!):\r\n    • Fix post body briefly flashing the original language after voting, and not reverting when toggling translation off while scrolled past the body\r\n    • Fix comment cells being skipped when toggling translation, and translations appearing half•applied after returning to Apollo from another app\r\n    • Fix plain multi•paragraph post bodies being skipped\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+          "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.0/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.7.0.ipa",
+          "size": 114987558
+        },
+        {
+          "version": "1.15.11",
           "buildVersion": "2.6.1",
           "date": "2026-05-02T02:02:08Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.6.1\"\n\nRelease Notes\nFix tab bar disappearing after using iOS share sheet\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
@@ -82,14 +90,25 @@
         }
       },
       "version": "1.15.11",
-      "buildVersion": "2.6.1",
-      "versionDate": "2026-05-02T02:02:08Z",
-      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.6.1\"\n\nRelease Notes\nFix tab bar disappearing after using iOS share sheet\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
-      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.6.1/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.6.1.ipa",
-      "size": 114971510
+      "buildVersion": "2.7.0",
+      "versionDate": "2026-05-06T08:12:34Z",
+      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.0\"\n\nRelease Notes\n• New Tag Filters feature to blur NSFW and/or Spoiler posts (including titles) in feeds (thanks @icpryde for implementing this!)\r\n    • Configure in Settings > Tag Filters\r\n    • Tap a blurred post for a \"View hidden post?\" confirmation alert\r\n    • Per•subreddit overrides let you toggle NSFW or Spoiler filtering for individual subreddits\r\n• Bulk translation fixes (thanks @icpryde!):\r\n    • Fix post body briefly flashing the original language after voting, and not reverting when toggling translation off while scrolled past the body\r\n    • Fix comment cells being skipped when toggling translation, and translations appearing half•applied after returning to Apollo from another app\r\n    • Fix plain multi•paragraph post bodies being skipped\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.0/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.7.0.ipa",
+      "size": 114987558
     }
   ],
   "news": [
+    {
+      "appID": "com.christianselig.Apollo",
+      "title": "1.15.11_2.7.0 - 06 May",
+      "identifier": "release-1.15.11_2.7.0",
+      "caption": "Update for ImprovedCustomApi now available!",
+      "date": "2026-05-06T08:12:34Z",
+      "tintColor": "#3F91FE",
+      "imageURL": "https://raw.githubusercontent.com/lyh16/Apollo/refs/heads/main/public/images/news/news_2.png",
+      "notify": true,
+      "url": "https://github.com/lyh16/Apollo/releases/tag/v1.15.11_2.7.0"
+    },
     {
       "appID": "com.christianselig.Apollo",
       "title": "1.15.11_2.6.1 - 02 May",
