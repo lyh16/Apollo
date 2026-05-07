@@ -30,6 +30,14 @@
       "versions": [
         {
           "version": "1.15.11",
+          "buildVersion": "2.7.1",
+          "date": "2026-05-07T08:22:43Z",
+          "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.1\"\n\nRelease Notes\n• Bulk translation: fix post titles getting automatically translated when Auto Translate is off (thanks @icpryde!) (150)\r\n• Fix crash when searching for a URL in the Search tab. URL searches now return posts that link to that URL. (152)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+          "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.1/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.7.1.ipa",
+          "size": 114991448
+        },
+        {
+          "version": "1.15.11",
           "buildVersion": "2.7.0",
           "date": "2026-05-06T08:12:34Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.0\"\n\nRelease Notes\n• New Tag Filters feature to blur NSFW and/or Spoiler posts (including titles) in feeds (thanks @icpryde for implementing this!)\r\n    • Configure in Settings > Tag Filters\r\n    • Tap a blurred post for a \"View hidden post?\" confirmation alert\r\n    • Per•subreddit overrides let you toggle NSFW or Spoiler filtering for individual subreddits\r\n• Bulk translation fixes (thanks @icpryde!):\r\n    • Fix post body briefly flashing the original language after voting, and not reverting when toggling translation off while scrolled past the body\r\n    • Fix comment cells being skipped when toggling translation, and translations appearing half•applied after returning to Apollo from another app\r\n    • Fix plain multi•paragraph post bodies being skipped\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
@@ -90,14 +98,25 @@
         }
       },
       "version": "1.15.11",
-      "buildVersion": "2.7.0",
-      "versionDate": "2026-05-06T08:12:34Z",
-      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.0\"\n\nRelease Notes\n• New Tag Filters feature to blur NSFW and/or Spoiler posts (including titles) in feeds (thanks @icpryde for implementing this!)\r\n    • Configure in Settings > Tag Filters\r\n    • Tap a blurred post for a \"View hidden post?\" confirmation alert\r\n    • Per•subreddit overrides let you toggle NSFW or Spoiler filtering for individual subreddits\r\n• Bulk translation fixes (thanks @icpryde!):\r\n    • Fix post body briefly flashing the original language after voting, and not reverting when toggling translation off while scrolled past the body\r\n    • Fix comment cells being skipped when toggling translation, and translations appearing half•applied after returning to Apollo from another app\r\n    • Fix plain multi•paragraph post bodies being skipped\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
-      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.0/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.7.0.ipa",
-      "size": 114987558
+      "buildVersion": "2.7.1",
+      "versionDate": "2026-05-07T08:22:43Z",
+      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.1\"\n\nRelease Notes\n• Bulk translation: fix post titles getting automatically translated when Auto Translate is off (thanks @icpryde!) (150)\r\n• Fix crash when searching for a URL in the Search tab. URL searches now return posts that link to that URL. (152)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.1/GLASS_Apollo-1.15.11_ImprovedCustomApi-2.7.1.ipa",
+      "size": 114991448
     }
   ],
   "news": [
+    {
+      "appID": "com.christianselig.Apollo",
+      "title": "1.15.11_2.7.1 - 07 May",
+      "identifier": "release-1.15.11_2.7.1",
+      "caption": "Update for ImprovedCustomApi now available!",
+      "date": "2026-05-07T08:22:43Z",
+      "tintColor": "#3F91FE",
+      "imageURL": "https://raw.githubusercontent.com/lyh16/Apollo/refs/heads/main/public/images/news/news_2.png",
+      "notify": true,
+      "url": "https://github.com/lyh16/Apollo/releases/tag/v1.15.11_2.7.1"
+    },
     {
       "appID": "com.christianselig.Apollo",
       "title": "1.15.11_2.7.0 - 06 May",
