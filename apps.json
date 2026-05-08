@@ -30,6 +30,14 @@
       "versions": [
         {
           "version": "1.15.11",
+          "buildVersion": "2.7.2",
+          "date": "2026-05-08T07:20:02Z",
+          "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.2\"\n\nRelease Notes\n• Bulk translation: add Bosnian language support (thanks @hllvc!) (154)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+          "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.2/Apollo-1.15.11_ImprovedCustomApi-2.7.2.ipa",
+          "size": 114991379
+        },
+        {
+          "version": "1.15.11",
           "buildVersion": "2.7.1",
           "date": "2026-05-07T08:22:43Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.1\"\n\nRelease Notes\n• Bulk translation: fix post titles getting automatically translated when Auto Translate is off (thanks @icpryde!) (150)\r\n• Fix crash when searching for a URL in the Search tab. URL searches now return posts that link to that URL. (152)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
@@ -98,14 +106,25 @@
         }
       },
       "version": "1.15.11",
-      "buildVersion": "2.7.1",
-      "versionDate": "2026-05-07T08:22:43Z",
-      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.1\"\n\nRelease Notes\n• Bulk translation: fix post titles getting automatically translated when Auto Translate is off (thanks @icpryde!) (150)\r\n• Fix crash when searching for a URL in the Search tab. URL searches now return posts that link to that URL. (152)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
-      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.1/Apollo-1.15.11_ImprovedCustomApi-2.7.1.ipa",
-      "size": 114991305
+      "buildVersion": "2.7.2",
+      "versionDate": "2026-05-08T07:20:02Z",
+      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.2\"\n\nRelease Notes\n• Bulk translation: add Bosnian language support (thanks @hllvc!) (154)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.2/Apollo-1.15.11_ImprovedCustomApi-2.7.2.ipa",
+      "size": 114991379
     }
   ],
   "news": [
+    {
+      "appID": "com.christianselig.Apollo",
+      "title": "1.15.11_2.7.2 - 08 May",
+      "identifier": "release-1.15.11_2.7.2",
+      "caption": "Update for ImprovedCustomApi now available!",
+      "date": "2026-05-08T07:20:02Z",
+      "tintColor": "#3F91FE",
+      "imageURL": "https://raw.githubusercontent.com/lyh16/Apollo/refs/heads/main/public/images/news/news_2.png",
+      "notify": true,
+      "url": "https://github.com/lyh16/Apollo/releases/tag/v1.15.11_2.7.2"
+    },
     {
       "appID": "com.christianselig.Apollo",
       "title": "1.15.11_2.7.1 - 07 May",
