@@ -1,4 +1,4 @@
-name: Fix CFBundleVersion in Previous Releases
+name: Rewrite Version Fields in Previous Releases
 
 on:
   workflow_dispatch:
@@ -64,10 +64,12 @@ jobs:
             echo "Processing: $TAG_NAME"
             echo "======================================"
             
-            # Extract ICA version from tag (e.g., v1.15.11_1.4.1 -> 1.4.1)
-            if [[ "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+_([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-              ICA_VERSION="${BASH_REMATCH[1]}"
-              echo "Target CFBundleVersion: $ICA_VERSION"
+            # Extract Apollo and ICA versions from tag (e.g., v1.15.11_2.6.1)
+            if [[ "$TAG_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)_([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+              APOLLO_VERSION="${BASH_REMATCH[1]}"
+              ICA_VERSION="${BASH_REMATCH[2]}"
+              echo "Target CFBundleShortVersionString: $ICA_VERSION (ICA)"
+              echo "Target CFBundleVersion: $APOLLO_VERSION (Apollo)"
             else
               echo "⚠️  Skipping $TAG_NAME - does not match expected format (v*.*.*_*.*.*)"
               continue
@@ -111,30 +113,40 @@ jobs:
                 continue
               fi
               
-              # Get current CFBundleVersion
-              CURRENT_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$INFO_PLIST" 2>/dev/null || echo "unknown")
-              echo "    Current CFBundleVersion: $CURRENT_VERSION"
-              
-              # Check if already correct
-              if [ "$CURRENT_VERSION" = "$ICA_VERSION" ]; then
+              # Read current values
+              CURRENT_SHORT=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$INFO_PLIST" 2>/dev/null || echo "unknown")
+              CURRENT_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$INFO_PLIST" 2>/dev/null || echo "unknown")
+              echo "    Current CFBundleShortVersionString: $CURRENT_SHORT"
+              echo "    Current CFBundleVersion: $CURRENT_BUILD"
+
+              # Skip if both are already correct
+              if [ "$CURRENT_SHORT" = "$ICA_VERSION" ] && [ "$CURRENT_BUILD" = "$APOLLO_VERSION" ]; then
                 echo "    ✓ Already correct, skipping"
                 rm -rf "$WORK_DIR" "$ASSET_NAME"
                 continue
               fi
-              
-              # Update or Add CFBundleVersion
-              echo "    Updating CFBundleVersion to: $ICA_VERSION"
-              if [ "$CURRENT_VERSION" = "unknown" ]; then
-                # Key doesn't exist, add it
-                /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $ICA_VERSION" "$INFO_PLIST"
+
+              # CFBundleShortVersionString → ICA version (drives SideStore update detection)
+              echo "    Setting CFBundleShortVersionString to: $ICA_VERSION"
+              if [ "$CURRENT_SHORT" = "unknown" ]; then
+                /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string $ICA_VERSION" "$INFO_PLIST"
               else
-                # Key exists, update it
-                /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $ICA_VERSION" "$INFO_PLIST"
+                /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $ICA_VERSION" "$INFO_PLIST"
               fi
-              
-              # Verify the change
-              NEW_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$INFO_PLIST")
-              echo "    Verified CFBundleVersion: $NEW_VERSION"
+
+              # CFBundleVersion → Apollo version (informational)
+              echo "    Setting CFBundleVersion to: $APOLLO_VERSION"
+              if [ "$CURRENT_BUILD" = "unknown" ]; then
+                /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $APOLLO_VERSION" "$INFO_PLIST"
+              else
+                /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $APOLLO_VERSION" "$INFO_PLIST"
+              fi
+
+              # Verify
+              NEW_SHORT=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$INFO_PLIST")
+              NEW_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$INFO_PLIST")
+              echo "    Verified CFBundleShortVersionString: $NEW_SHORT"
+              echo "    Verified CFBundleVersion: $NEW_BUILD"
               
               # Re-sign the app
               echo "    Re-signing..."
@@ -192,7 +204,10 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## Fix CFBundleVersion Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Rewrite Version Fields Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Scheme:** CFBundleShortVersionString = ICA version, CFBundleVersion = Apollo version" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "**Mode:** 🔍 Dry Run (Preview Only)" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
@@ -200,7 +215,8 @@ jobs:
           else
             echo "**Mode:** ✅ Live Update" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "All IPAs have been updated with correct CFBundleVersion values." >> $GITHUB_STEP_SUMMARY
+            echo "All IPAs have been rewritten with the new version scheme." >> $GITHUB_STEP_SUMMARY
+            echo "Run the main \`build release\` workflow next to regenerate apps.json files." >> $GITHUB_STEP_SUMMARY
           fi
           
           if [ -n "${{ inputs.specific_tag }}" ]; then
