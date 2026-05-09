@@ -37,10 +37,21 @@ Apollo itself is frozen at `1.15.11` (the last public release before Christian S
 
 | Field | Value | Where it shows |
 |-------|-------|----------------|
-| `version` / `CFBundleShortVersionString` | ICA tweak version (e.g. `2.7.2`) | SideStore "Version" column, the primary version shown in iOS Settings |
+| `version` / `CFBundleShortVersionString` | ICA tweak version (e.g. `2.8.0`) | SideStore "Version" column, the primary version shown in iOS Settings, **and Apollo's own About page** |
 | `buildVersion` / `CFBundleVersion` | Apollo app version (`1.15.11`) | The build number shown in parentheses in iOS Settings |
 
-So in **iOS Settings → General → iPhone Storage → Apollo** you will see something like **`2.7.2 (1.15.11)`** — the ICA tweak version is the public version, Apollo's frozen version sits in the build-number slot. The release tags, release titles, and IPA filenames on GitHub are unchanged and still read e.g. `Apollo v1.15.11 with ImprovedCustomApi v2.7.2`.
+**Where you will see this in practice.** Anywhere iOS, SideStore, or Apollo itself reads `CFBundleShortVersionString` will now display the ICA tweak version instead of Apollo's underlying `1.15.11`:
+
+| Surface | Displays | Notes |
+|---|---|---|
+| SideStore "Version" column | ICA version (e.g. `2.8.0`) | This is the whole point of the swap — drives update detection |
+| iOS Settings → General → iPhone Storage → Apollo | `2.8.0 (1.15.11)` | The value in parentheses is `CFBundleVersion`, where Apollo's version is preserved |
+| **Apollo's own About page (in-app)** | ICA version (e.g. `2.8.0`) | Apollo reads its own version from the same plist key — there is no way to make it show `1.15.11` separately without binary-patching the app |
+| GitHub release tags | `v1.15.11_2.8.0` | Unchanged — both versions are visible |
+| GitHub release titles | `Apollo v1.15.11 with ImprovedCustomApi v2.8.0` | Unchanged |
+| IPA filenames | `Apollo-1.15.11_ImprovedCustomApi-2.8.0.ipa` | Unchanged |
+
+So inside Apollo and in iOS's primary version display, you will see the ICA number where you might have expected Apollo's `1.15.11`. The Apollo version is still recoverable in iOS Settings (the build-number slot in parentheses) and on every GitHub release page — it just isn't the headline number anymore.
 
 **Why this swap?** SideStore's update detection parses `version` as semantic versioning (`major.minor.patch`) and only compares those three components; `buildVersion` is consulted just as a beta-channel tiebreaker or as a fallback when SemVer parsing fails. Using Apollo's frozen `1.15.11` as `version` produced the same string for every release, so SideStore never offered updates even when the underlying ICA tweak changed. Surfacing the ICA version as `version` makes every release advertise a strictly higher SemVer than the previous one, and update detection works out of the box.
 
