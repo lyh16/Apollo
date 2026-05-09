@@ -85,23 +85,31 @@ def fetch_github_releases(repo_url: str) -> List[Dict]:
 def extract_version_info(tag_name: str) -> Tuple[str, str]:
     """
     Extract version and buildVersion from GitHub release tag.
-    
+
+    The ICA version drives `version` because SideStore's update detection
+    parses `version` as SemVer (major.minor.patch) and ignores buildVersion
+    for the primary "is newer?" check. Apollo's own version is essentially
+    frozen at 1.15.11, so using it as `version` produces no diff between
+    releases and SideStore never offers updates.
+
     Handles formats:
-    - 'v1.15.11_1.3.2' → version='1.15.11', buildVersion='1.3.2'
-    - 'v1.15.11' → version='1.15.11', buildVersion='1'
-    
+    - 'v1.15.11_2.6.1' → version='2.6.1' (ICA), buildVersion='1.15.11' (Apollo)
+    - 'v1.15.11'        → version='1.15.11', buildVersion='1'
+
     Returns:
         Tuple of (version, buildVersion)
     """
     # Remove 'v' prefix
     tag = tag_name.lstrip("v")
 
-    # Try format: VERSION_BUILDVERSION
+    # Try format: APOLLO_ICA
     match = re.match(r"(\d+\.\d+\.\d+)(?:_(\d+\.\d+\.\d+))?", tag)
     if match:
-        version = match.group(1)
-        build_version = match.group(2) if match.group(2) else "1"
-        return version, build_version
+        apollo_version = match.group(1)
+        ica_version = match.group(2)
+        if ica_version:
+            return ica_version, apollo_version
+        return apollo_version, "1"
 
     # Fallback: extract any version number
     version_match = re.search(r"(\d+\.\d+\.\d+)", tag)

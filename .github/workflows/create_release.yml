@@ -168,6 +168,7 @@ jobs:
         env:
             OUTPUT_NAME: ${{ steps.download-files.outputs.OUTPUT_NAME }}
             ICA_VERSION: ${{ steps.download-files.outputs.ICA_VERSION }}
+            APOLLO_VERSION: ${{ steps.download-files.outputs.APOLLO_VERSION }}
         working-directory: ${{ steps.download-files.outputs.OUTPUT_NAME }}
         run: |
           cyan -i "${GITHUB_WORKSPACE}/Apollo.ipa" -o "Payload/Apollo.app" -f "${GITHUB_WORKSPACE}/improvedcustomapi.deb" --fakesign
@@ -175,17 +176,22 @@ jobs:
           # Apply Dystopia patches (URL scheme + App Group fix)
           bash "${GITHUB_WORKSPACE}/dystopia-patch.sh"
 
-          # Update CFBundleVersion in Info.plist to match ICA version
-          echo "Updating CFBundleVersion to ${ICA_VERSION}"
-          # Check if key exists, add or set accordingly
+          # SideStore detects updates via CFBundleShortVersionString (SemVer compare).
+          # Apollo's own version is frozen, so we surface ICA as the public version
+          # and keep Apollo's version in CFBundleVersion for reference.
+          echo "Setting CFBundleShortVersionString to ${ICA_VERSION}"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
+
+          echo "Setting CFBundleVersion to ${APOLLO_VERSION}"
           if /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "Payload/Apollo.app/Info.plist" 2>/dev/null; then
-            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
+            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APOLLO_VERSION}" "Payload/Apollo.app/Info.plist"
           else
-            /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
+            /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${APOLLO_VERSION}" "Payload/Apollo.app/Info.plist"
           fi
 
-          # Verify the change
+          SHORT_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "Payload/Apollo.app/Info.plist")
           BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "Payload/Apollo.app/Info.plist")
+          echo "CFBundleShortVersionString is now: ${SHORT_VERSION}"
           echo "CFBundleVersion is now: ${BUILD_VERSION}"
 
           echo "Zipping ${OUTPUT_NAME}.ipa"
@@ -218,6 +224,7 @@ jobs:
         env:
             OUTPUT_NAME: ${{ steps.download-files.outputs.OUTPUT_NAME }}
             ICA_VERSION: ${{ steps.download-files.outputs.ICA_VERSION }}
+            APOLLO_VERSION: ${{ steps.download-files.outputs.APOLLO_VERSION }}
         working-directory: NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}
         run: |
           cyan -i "${GITHUB_WORKSPACE}/Apollo.ipa" -o "Payload/Apollo.app" -f "${GITHUB_WORKSPACE}/improvedcustomapi.deb" --fakesign -e
@@ -225,17 +232,22 @@ jobs:
           # Apply Dystopia patches (URL scheme + App Group fix)
           bash "${GITHUB_WORKSPACE}/dystopia-patch.sh"
 
-          # Update CFBundleVersion in Info.plist to match ICA version
-          echo "Updating CFBundleVersion to ${ICA_VERSION}"
-          # Check if key exists, add or set accordingly
+          # SideStore detects updates via CFBundleShortVersionString (SemVer compare).
+          # Apollo's own version is frozen, so we surface ICA as the public version
+          # and keep Apollo's version in CFBundleVersion for reference.
+          echo "Setting CFBundleShortVersionString to ${ICA_VERSION}"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
+
+          echo "Setting CFBundleVersion to ${APOLLO_VERSION}"
           if /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "Payload/Apollo.app/Info.plist" 2>/dev/null; then
-            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
+            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APOLLO_VERSION}" "Payload/Apollo.app/Info.plist"
           else
-            /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${ICA_VERSION}" "Payload/Apollo.app/Info.plist"
+            /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${APOLLO_VERSION}" "Payload/Apollo.app/Info.plist"
           fi
 
-          # Verify the change
+          SHORT_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "Payload/Apollo.app/Info.plist")
           BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "Payload/Apollo.app/Info.plist")
+          echo "CFBundleShortVersionString is now: ${SHORT_VERSION}"
           echo "CFBundleVersion is now: ${BUILD_VERSION}"
 
           echo "Zipping NO-EXTENSIONS_${OUTPUT_NAME}.ipa"
