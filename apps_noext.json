@@ -29,60 +29,68 @@
       ],
       "versions": [
         {
-          "version": "1.15.11",
-          "buildVersion": "2.7.2",
+          "version": "2.8.0",
+          "buildVersion": "1.15.11",
+          "date": "2026-05-09T06:43:54Z",
+          "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.8.0\"\n\nRelease Notes\n• Support for uploading images directly to Reddit instead of Imgur (thanks @icpryde for the implementation!) (123)\r\n    • Configure in Settings > Custom API > Media > Image Upload Host\r\n    • Reddit image upload is experimental and does not currently support multi•image or video uploads\r\n    • It's normal to see an \"amazonaws.com\" URL after attaching an image • it is replaced after posting\r\n    • Right after posting, Apollo may briefly show a generic preview icon while Reddit finishes processing the image. Pull to refresh and the real thumbnail should appear\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+          "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.8.0/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.8.0.ipa",
+          "size": 78206401
+        },
+        {
+          "version": "2.7.2",
+          "buildVersion": "1.15.11",
           "date": "2026-05-08T07:20:02Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.2\"\n\nRelease Notes\n• Bulk translation: add Bosnian language support (thanks @hllvc!) (154)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.2/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.7.2.ipa",
-          "size": 78170186
+          "size": 78170341
         },
         {
-          "version": "1.15.11",
-          "buildVersion": "2.7.1",
+          "version": "2.7.1",
+          "buildVersion": "1.15.11",
           "date": "2026-05-07T08:22:43Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.1\"\n\nRelease Notes\n• Bulk translation: fix post titles getting automatically translated when Auto Translate is off (thanks @icpryde!) (150)\r\n• Fix crash when searching for a URL in the Search tab. URL searches now return posts that link to that URL. (152)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.1/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.7.1.ipa",
-          "size": 78170112
+          "size": 78170266
         },
         {
-          "version": "1.15.11",
-          "buildVersion": "2.7.0",
+          "version": "2.7.0",
+          "buildVersion": "1.15.11",
           "date": "2026-05-06T08:12:34Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.0\"\n\nRelease Notes\n• New Tag Filters feature to blur NSFW and/or Spoiler posts (including titles) in feeds (thanks @icpryde for implementing this!)\r\n    • Configure in Settings > Tag Filters\r\n    • Tap a blurred post for a \"View hidden post?\" confirmation alert\r\n    • Per•subreddit overrides let you toggle NSFW or Spoiler filtering for individual subreddits\r\n• Bulk translation fixes (thanks @icpryde!):\r\n    • Fix post body briefly flashing the original language after voting, and not reverting when toggling translation off while scrolled past the body\r\n    • Fix comment cells being skipped when toggling translation, and translations appearing half•applied after returning to Apollo from another app\r\n    • Fix plain multi•paragraph post bodies being skipped\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.0/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.7.0.ipa",
-          "size": 78166222
+          "size": 78166377
         },
         {
-          "version": "1.15.11",
-          "buildVersion": "2.6.1",
+          "version": "2.6.1",
+          "buildVersion": "1.15.11",
           "date": "2026-05-02T02:02:08Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.6.1\"\n\nRelease Notes\nFix tab bar disappearing after using iOS share sheet\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.6.1/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.6.1.ipa",
-          "size": 78150174
+          "size": 78150328
         },
         {
-          "version": "1.15.11",
-          "buildVersion": "2.6.0",
+          "version": "2.6.0",
+          "buildVersion": "1.15.11",
           "date": "2026-05-01T08:04:56Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.6.0\"\n\nRelease Notes\n• Bulk translation improvements (thanks @icpryde for continuing to refine this!)\r\n    • New Don't Translate languages list in Settings > Translation to keep selected languages untranslated\r\n    • New option to translate post titles in Settings > Translation\r\n    • Various bug fixes and stability improvements\r\n• Tap a comment or post's relative•time label (e.g. \"2.8y\") to show an alert with the absolute creation date and time, mirroring Apollo's existing \"Edited\" alert (144)\r\n• iOS 26/Liquid Glass: fix tab bar not reappearing on scrolling up when \"Hide Bars on Scroll\" is enabled (thanks @icpryde for the fix!) (131, 73)\r\n• Liquid Glass: hide translucent status bar background strip that appears at the top of the screen when \"Hide Bars on Scroll\" is enabled\r\n• Liquid Glass: fix first list row being clipped under nav bar in subreddit list view when \"Hide Bars on Scroll\" is enabled\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.6.0/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.6.0.ipa",
-          "size": 78151036
+          "size": 78151191
         },
         {
-          "version": "1.15.11",
-          "buildVersion": "2.5.0",
+          "version": "2.5.0",
+          "buildVersion": "1.15.11",
           "date": "2026-04-29T08:04:50Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.5.0\"\n\nRelease Notes\n• New bulk translation feature for comment threads and self posts (thanks @icpryde for implementing this feature!) (140)\r\n    • When enabled, loaded comments are translated in•place. Configure in Settings > Translation\r\n    • Adds a per•thread globe toggle to switch between translated and original text in comments view\r\n    • Supports both Google and LibreTranslate, with custom LibreTranslate URL and API key\r\n    • Translations persist in place while voting, collapsing and expanding comments, opening previews, scrolling, and refreshing the thread\r\n    • Preserves links while translated and leaves code or preformatted content untranslated\r\n\r\n| | |\r\n|:••:|:••:|\r\n|  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.5.0/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.5.0.ipa",
-          "size": 78108507
+          "size": 78108662
         },
         {
-          "version": "1.15.11",
-          "buildVersion": "2.4.0",
+          "version": "2.4.0",
+          "buildVersion": "1.15.11",
           "date": "2026-04-26T13:13:23Z",
           "localizedDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.4.0\"\n\nRelease Notes\n• Add option to proxy Imgur images through DuckDuckGo for regional blocks (138)\r\n    • Enable in Settings > General > Custom API > Media\r\n    • Only supports viewing single images; albums are not supported\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
           "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.4.0/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.4.0.ipa",
-          "size": 78064557
+          "size": 78064712
         }
       ],
       "appPermissions": {
@@ -105,15 +113,26 @@
           "PhotoLibrary": "App accesses photo library."
         }
       },
-      "version": "1.15.11",
-      "buildVersion": "2.7.2",
-      "versionDate": "2026-05-08T07:20:02Z",
-      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.7.2\"\n\nRelease Notes\n• Bulk translation: add Bosnian language support (thanks @hllvc!) (154)\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
-      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.7.2/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.7.2.ipa",
-      "size": 78170186
+      "version": "2.8.0",
+      "buildVersion": "1.15.11",
+      "versionDate": "2026-05-09T06:43:54Z",
+      "versionDescription": "Apollo version: \"v1.15.11\"\nImprovedCustomApi version: \"v2.8.0\"\n\nRelease Notes\n• Support for uploading images directly to Reddit instead of Imgur (thanks @icpryde for the implementation!) (123)\r\n    • Configure in Settings > Custom API > Media > Image Upload Host\r\n    • Reddit image upload is experimental and does not currently support multi•image or video uploads\r\n    • It's normal to see an \"amazonaws.com\" URL after attaching an image • it is replaced after posting\r\n    • Right after posting, Apollo may briefly show a generic preview icon while Reddit finishes processing the image. Pull to refresh and the real thumbnail should appear\r\n\r\n| | | |\r\n|:••:|:••:|:••:|\r\n|  |  |  |\r\nKnown Issues\n• Apollo Ultra features may cause app to crash\n• Imgur multi•image upload\n• Uploads usually fail on the first attempt but subsequent retries should succeed\n• Share URLs in private messages and long•tapping them still open in the in•app browser",
+      "downloadURL": "https://github.com/lyh16/Apollo/releases/download/v1.15.11_2.8.0/NO-EXTENSIONS_Apollo-1.15.11_ImprovedCustomApi-2.8.0.ipa",
+      "size": 78206401
     }
   ],
   "news": [
+    {
+      "appID": "com.christianselig.Apollo",
+      "title": "1.15.11_2.8.0 - 09 May",
+      "identifier": "release-1.15.11_2.8.0",
+      "caption": "Update for ImprovedCustomApi now available!",
+      "date": "2026-05-09T06:43:54Z",
+      "tintColor": "#3F91FE",
+      "imageURL": "https://raw.githubusercontent.com/lyh16/Apollo/refs/heads/main/public/images/news/news_2.png",
+      "notify": true,
+      "url": "https://github.com/lyh16/Apollo/releases/tag/v1.15.11_2.8.0"
+    },
     {
       "appID": "com.christianselig.Apollo",
       "title": "1.15.11_2.7.2 - 08 May",
