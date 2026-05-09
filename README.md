@@ -31,6 +31,19 @@ This source tracks [JeffreyCA/Apollo-ImprovedCustomApi](https://github.com/Jeffr
 
 Before raising any issues, please check the [ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi/issues) repo first — this source only integrates it.
 
+### Versioning
+
+Apollo itself is frozen at `1.15.11` (the last public release before Christian Selig was forced off the App Store). What actually changes between releases is the [ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi) tweak version that gets patched in. To keep SideStore and other AltStore-compatible clients reliably detecting updates, this fork uses the following field mapping in both the source JSON and the IPA's `Info.plist`:
+
+| Field | Value | Where it shows |
+|-------|-------|----------------|
+| `version` / `CFBundleShortVersionString` | ICA tweak version (e.g. `2.7.2`) | SideStore "Version" column, the primary version shown in iOS Settings |
+| `buildVersion` / `CFBundleVersion` | Apollo app version (`1.15.11`) | The build number shown in parentheses in iOS Settings |
+
+So in **iOS Settings → General → iPhone Storage → Apollo** you will see something like **`2.7.2 (1.15.11)`** — the ICA tweak version is the public version, Apollo's frozen version sits in the build-number slot. The release tags, release titles, and IPA filenames on GitHub are unchanged and still read e.g. `Apollo v1.15.11 with ImprovedCustomApi v2.7.2`.
+
+**Why this swap?** SideStore's update detection parses `version` as semantic versioning (`major.minor.patch`) and only compares those three components; `buildVersion` is consulted just as a beta-channel tiebreaker or as a fallback when SemVer parsing fails. Using Apollo's frozen `1.15.11` as `version` produced the same string for every release, so SideStore never offered updates even when the underlying ICA tweak changed. Surfacing the ICA version as `version` makes every release advertise a strictly higher SemVer than the previous one, and update detection works out of the box.
+
 ## Available Sources
 
 | Version | Best For | Features |
