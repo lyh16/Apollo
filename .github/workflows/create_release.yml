@@ -30,8 +30,10 @@ jobs:
   check-new-release:
     runs-on: ubuntu-latest
     outputs:
-      should_build: ${{ steps.check.outputs.should_build }}
-      release_tag: ${{ steps.check.outputs.release_tag }}
+      should_build:  ${{ steps.check.outputs.should_build }}
+      release_tag:   ${{ steps.check.outputs.release_tag }}
+      release_notes: ${{ steps.check.outputs.release_notes }}
+      deb_url:       ${{ steps.check.outputs.deb_url }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -43,45 +45,99 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # Get the latest release tag from external repo
-          LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" "${{ env.GITHUB_API_URL }}" | jq -r '.tag_name')
+          set -euo pipefail
+
+          # Poll upstream /releases/latest with retries. `-L` follows the 301
+          # GitHub serves when the upstream repo is renamed or transferred
+          # (which is what caused the previous `jq: Cannot iterate over null
+          # (null)` failure — the response was a redirect body, not a release
+          # object).
+          attempt=0
+          while :; do
+            attempt=$((attempt+1))
+            STATUS=$(curl -sSL -o response.json -w '%{http_code}' \
+              -H "Authorization: token $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "${{ env.GITHUB_API_URL }}" || echo "000")
+            echo "Attempt $attempt: HTTP $STATUS"
+
+            if [ "$STATUS" = "200" ]; then
+              break
+            fi
+
+            if [ "$attempt" -ge 5 ]; then
+              echo "::error::Upstream poll failed after $attempt attempts (HTTP $STATUS)."
+              echo "Response body:"
+              cat response.json || true
+              exit 1
+            fi
+            sleep $((2 ** attempt))
+          done
+
+          # Validate shape before piping to jq so error bodies (rate limit,
+          # redirect HTML, 404 page) surface a readable message instead of
+          # a jq trace.
+          if [ "$(jq -r 'type' response.json)" != "object" ] \
+              || [ "$(jq -r '.assets | type' response.json)" != "array" ]; then
+            echo "::error::Unexpected response from upstream API:"
+            cat response.json
+            exit 1
+          fi
+
+          LATEST_TAG=$(jq -r '.tag_name' response.json)
+          RELEASE_NOTES=$(jq -r '.body // ""' response.json)
+          DEB_URL=$(jq -r '.assets[]
+              | select(.name | test("iphoneos-arm64_rootless\\.deb$"))
+              | .browser_download_url' response.json)
+
+          if [ -z "$DEB_URL" ] || [ "$DEB_URL" = "null" ]; then
+            echo "::error::Release $LATEST_TAG has no iphoneos-arm64_rootless.deb asset."
+            exit 1
+          fi
+
           echo "Latest external release: $LATEST_TAG"
-          
-          # Get the latest release tag from this repo
-          CURRENT_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" \
+          echo "DEB URL:                 $DEB_URL"
+
+          # Get the latest release tag from this repo (also -L for safety).
+          CURRENT_TAG=$(curl -sSL -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
             | jq -r '.tag_name // empty')
           echo "Current repo release: $CURRENT_TAG"
-          
-          # Extract version from current tag (format: v1.17.5_1.0.14)
+
           if [ -n "$CURRENT_TAG" ]; then
             CURRENT_ICA_VERSION=$(echo "$CURRENT_TAG" | sed -nE 's/.*_v?(.+)/\1/p')
           else
             CURRENT_ICA_VERSION=""
           fi
-          
-          # Extract version from latest tag
+
           LATEST_ICA_VERSION=$(echo "$LATEST_TAG" | sed -nE 's/v(.+)/\1/p')
-          
+
           echo "Current ICA version: $CURRENT_ICA_VERSION"
-          echo "Latest ICA version: $LATEST_ICA_VERSION"
-          
-          # Check if we should build (new release detected or manual/workflow_call trigger)
+          echo "Latest ICA version:  $LATEST_ICA_VERSION"
+
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "Manual or workflow_call trigger - building"
-            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            should_build=true
           elif [ -z "$CURRENT_ICA_VERSION" ]; then
             echo "No existing release found - building"
-            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            should_build=true
           elif [ "$LATEST_ICA_VERSION" != "$CURRENT_ICA_VERSION" ]; then
             echo "New release detected - building"
-            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            should_build=true
           else
             echo "No new release - skipping build"
-            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            should_build=false
           fi
-          
-          echo "release_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "should_build=$should_build"
+            echo "release_tag=$LATEST_TAG"
+            echo "deb_url=$DEB_URL"
+            echo "release_notes<<__EOF__"
+            echo "$RELEASE_NOTES"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
 
   build-apollo-ipa:
     needs: check-new-release
@@ -111,27 +167,16 @@ jobs:
       - name: Install ldid
         run: brew install ldid
 
-      - name: Fetch latest release information
+      - name: Forward release info from upstream poll
         id: get-release
+        # Reuse the values already validated by the `check-new-release` job
+        # instead of re-fetching (and risking the same redirect / null-jq
+        # failure mode in a second place).
         env:
-          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG:   ${{ needs.check-new-release.outputs.release_tag }}
+          RELEASE_NOTES: ${{ needs.check-new-release.outputs.release_notes }}
+          DEB_URL:       ${{ needs.check-new-release.outputs.deb_url }}
         run: |
-          RESPONSE=$(curl -s -H "Authorization: token $GH_TOKEN" "${{ env.GITHUB_API_URL }}")
-          if [ -z "$RESPONSE" ]; then
-            echo "Error: Failed to fetch release data!"
-            exit 1
-          fi
-
-          RELEASE_TAG=$(jq -r '.tag_name' <<< "$RESPONSE")
-          RELEASE_NOTES=$(jq -r '.body' <<< "$RESPONSE")
-
-          DEB_URL=$(jq -r '.assets[] | select(.name | test("iphoneos-arm64_rootless.deb$")) | .browser_download_url' <<< "$RESPONSE")
-
-          if [ -z "$DEB_URL" ] || [ "$DEB_URL" == "null" ]; then
-            echo "Error: No matching .deb file found!"
-            exit 1
-          fi
-
           echo "RELEASE_TAG=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
           {
             echo "RELEASE_NOTES<<EOF"
