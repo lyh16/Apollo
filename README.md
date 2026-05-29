@@ -6,7 +6,7 @@
 ![Release](https://img.shields.io/github/downloads/lyh16/Apollo/total)
 ![GitHub issues](https://img.shields.io/github/issues-raw/lyh16/Apollo)
 
-# Apollo for Reddit with ImprovedCustomAPI (Dystopia Fork)
+# Apollo for Reddit with Apollo-Reborn (Dystopia Fork)
 
 This is a fork of [Balackburn/Apollo](https://github.com/Balackburn/Apollo) with additional patches applied automatically during the build:
 
@@ -27,39 +27,48 @@ For the full setup walkthrough, see [this guide](https://www.reddit.com/r/apollo
 
 ### Upstream
 
-This source tracks [JeffreyCA/Apollo-ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi) releases automatically every 6 hours. It uses version `1.15.11` of the app and the latest release of the tweak.
+This source tracks [Apollo-Reborn/Apollo-Reborn](https://github.com/Apollo-Reborn/Apollo-Reborn) releases automatically every 6 hours. It uses version `1.15.11` of the app and the latest release of the tweak.
 
-Before raising any issues, please check the [ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi/issues) repo first — this source only integrates it.
+> **Heads up — the tweak moved.** What used to be `JeffreyCA/Apollo-ImprovedCustomApi` rebranded on 2026-05-22 to the community-maintained **Apollo-Reborn** org (`Apollo-Reborn/Apollo-Reborn`). The old URL still 301-redirects, but this fork now points at the canonical repo directly. The rename also changed the upstream tag format (see [Versioning](#versioning) below).
+
+Before raising any issues, please check the [Apollo-Reborn](https://github.com/Apollo-Reborn/Apollo-Reborn/issues) repo first — this source only integrates it.
 
 ### Versioning
 
-Apollo itself is frozen at `1.15.11` (the last public release before Christian Selig was forced off the App Store). What actually changes between releases is the [ImprovedCustomApi](https://github.com/JeffreyCA/Apollo-ImprovedCustomApi) tweak version that gets patched in. To keep SideStore and other AltStore-compatible clients reliably detecting updates, this fork uses the following field mapping in both the source JSON and the IPA's `Info.plist`:
+Apollo itself is frozen at `1.15.11` (the last public release before Christian Selig was forced off the App Store). What actually changes between releases is the [Apollo-Reborn](https://github.com/Apollo-Reborn/Apollo-Reborn) tweak version that gets patched in. To keep SideStore and other AltStore-compatible clients reliably detecting updates, this fork uses the following field mapping in both the source JSON and the IPA's `Info.plist`:
 
 | Field | Value | Where it shows |
 |-------|-------|----------------|
-| `version` / `CFBundleShortVersionString` | ICA tweak version (e.g. `2.8.0`) | SideStore "Version" column, the primary version shown in iOS Settings, **and Apollo's own About page** |
+| `version` / `CFBundleShortVersionString` | Apollo-Reborn tweak version (e.g. `3.0.0`) | SideStore "Version" column, the primary version shown in iOS Settings, **and Apollo's own About page** |
 | `buildVersion` / `CFBundleVersion` | Apollo app version (`1.15.11`) | The build number shown in parentheses in iOS Settings |
 
-**Where you will see this in practice.** Anywhere iOS, SideStore, or Apollo itself reads `CFBundleShortVersionString` will now display the ICA tweak version instead of Apollo's underlying `1.15.11`:
+**Where you will see this in practice.** Anywhere iOS, SideStore, or Apollo itself reads `CFBundleShortVersionString` will now display the tweak version instead of Apollo's underlying `1.15.11`:
 
 | Surface | Displays | Notes |
 |---|---|---|
-| SideStore "Version" column | ICA version (e.g. `2.8.0`) | This is the whole point of the swap — drives update detection |
-| iOS Settings → General → iPhone Storage → Apollo | `2.8.0 (1.15.11)` | The value in parentheses is `CFBundleVersion`, where Apollo's version is preserved |
-| **Apollo's own About page (in-app)** | ICA version (e.g. `2.8.0`) | Apollo reads its own version from the same plist key — there is no way to make it show `1.15.11` separately without binary-patching the app |
-| GitHub release tags | `v1.15.11_2.8.0` | Unchanged — both versions are visible |
-| GitHub release titles | `Apollo v1.15.11 with ImprovedCustomApi v2.8.0` | Unchanged |
-| IPA filenames | `Apollo-1.15.11_ImprovedCustomApi-2.8.0.ipa` | Unchanged |
+| SideStore "Version" column | tweak version (e.g. `3.0.0`) | This is the whole point of the swap — drives update detection |
+| iOS Settings → General → iPhone Storage → Apollo | `3.0.0 (1.15.11)` | The value in parentheses is `CFBundleVersion`, where Apollo's version is preserved |
+| **Apollo's own About page (in-app)** | tweak version (e.g. `3.0.0`) | Apollo reads its own version from the same plist key — there is no way to make it show `1.15.11` separately without binary-patching the app |
+| GitHub release tags | `v1.15.11_3.0.0` | Both versions are visible |
+| GitHub release titles | `Apollo v1.15.11 with Apollo-Reborn v3.0.0` | — |
+| IPA filenames | `Apollo-1.15.11_ImprovedCustomApi-3.0.0.ipa` | The `ImprovedCustomApi` token is a historical holdover kept for filename stability |
 
-So inside Apollo and in iOS's primary version display, you will see the ICA number where you might have expected Apollo's `1.15.11`. The Apollo version is still recoverable in iOS Settings (the build-number slot in parentheses) and on every GitHub release page — it just isn't the headline number anymore.
+So inside Apollo and in iOS's primary version display, you will see the tweak number where you might have expected Apollo's `1.15.11`. The Apollo version is still recoverable in iOS Settings (the build-number slot in parentheses) and on every GitHub release page — it just isn't the headline number anymore.
 
-**Why this swap?** SideStore's update detection parses `version` as semantic versioning (`major.minor.patch`) and only compares those three components; `buildVersion` is consulted just as a beta-channel tiebreaker or as a fallback when SemVer parsing fails. Using Apollo's frozen `1.15.11` as `version` produced the same string for every release, so SideStore never offered updates even when the underlying ICA tweak changed. Surfacing the ICA version as `version` makes every release advertise a strictly higher SemVer than the previous one, and update detection works out of the box.
+**Why this swap?** SideStore's update detection parses `version` as semantic versioning (`major.minor.patch`) and only compares those three components; `buildVersion` is consulted just as a beta-channel tiebreaker or as a fallback when SemVer parsing fails. Using Apollo's frozen `1.15.11` as `version` produced the same string for every release, so SideStore never offered updates even when the underlying tweak changed. Surfacing the tweak version as `version` makes every release advertise a strictly higher SemVer than the previous one, and update detection works out of the box.
+
+**How the tweak version is parsed from the upstream tag.** This is the part that broke during the Apollo-Reborn migration and is worth understanding:
+
+- The **old** upstream (`Apollo-ImprovedCustomApi`) tagged releases as just the tweak version, e.g. `v2.14.0`.
+- The **new** upstream (`Apollo-Reborn`) tags releases as `v<apollo>_<tweak>`, e.g. `v1.15.11_3.0.0` — it now bakes the base Apollo version into the tag.
+
+The build therefore derives the tweak version as **the trailing `_`-separated token of the upstream tag, with the leading `v` stripped** (`v1.15.11_3.0.0` → `3.0.0`; legacy `v2.14.0` → `2.14.0`). Our own release is then tagged `v1.15.11_<tweak>` (e.g. `v1.15.11_3.0.0`), which now matches the upstream tag exactly. The earlier code naïvely took *everything* after the `v`, so it read the new tag as the tweak version `1.15.11_3.0.0`, which produced a doubled release tag (`v1.15.11_1.15.11_3.0.0`) and a non-SemVer `CFBundleShortVersionString` — and SideStore, unable to parse it as a strictly higher version, stopped offering the update.
 
 ## Available Sources
 
 | Version | Best For | Features |
 |---------|----------|----------|
-| **Standard** | Most users | Apollo + ImprovedCustomApi + Dystopia spoof + App Group fix |
+| **Standard** | Most users | Apollo + Apollo-Reborn + Dystopia spoof + App Group fix |
 | **No Extensions** | Free Apple Developer accounts | Same as Standard with removed extensions — uses fewer App IDs (1 vs 7) |
 | **GLASS** | iOS 26+ users | Same as Standard with Liquid Glass UI Patch (iOS 26+) |
 | **No Extensions + LIQUID GLASS** | iOS 26 + Free accounts | Combines both options |

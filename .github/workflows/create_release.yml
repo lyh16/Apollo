@@ -23,7 +23,11 @@ env:
   PYTHON_VERSION: '3.13'
   APOLLO_IPA_URL: ${{ inputs.apollo_ipa_url || 'https://files.catbox.moe/o2lue0.ipa' }}
   CATBOX_UPLOAD: ${{ inputs.catbox_upload == 'false' }}
-  GITHUB_API_URL: "https://api.github.com/repos/JeffreyCA/Apollo-ImprovedCustomApi/releases/latest"
+  # Upstream tweak. Formerly JeffreyCA/Apollo-ImprovedCustomApi; as of 2026-05-22
+  # it rebranded to the community-maintained Apollo-Reborn/Apollo-Reborn org.
+  # The old path still 301-redirects here, but we point at the canonical repo
+  # directly so we don't depend on the redirect (curl keeps -L as a safety net).
+  GITHUB_API_URL: "https://api.github.com/repos/Apollo-Reborn/Apollo-Reborn/releases/latest"
   PYZULE_RW_URL: "https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip"
 
 jobs:
@@ -105,16 +109,25 @@ jobs:
             | jq -r '.tag_name // empty')
           echo "Current repo release: $CURRENT_TAG"
 
+          # The "tweak version" is the SemVer that actually changes between
+          # releases and that SideStore compares. Both the upstream tag
+          # (Apollo-Reborn uses `v<apollo>_<tweak>`, e.g. v1.15.11_3.0.0) and our
+          # own release tag share that `<apollo>_<tweak>` shape, so the tweak
+          # version is the trailing `_`-separated token with any leading `v`
+          # stripped. The legacy upstream form `v<tweak>` (e.g. v2.14.0) has no
+          # underscore and passes through unchanged.
+          tweak_version() { local t="${1#v}"; printf '%s' "${t##*_}"; }
+
           if [ -n "$CURRENT_TAG" ]; then
-            CURRENT_ICA_VERSION=$(echo "$CURRENT_TAG" | sed -nE 's/.*_v?(.+)/\1/p')
+            CURRENT_ICA_VERSION=$(tweak_version "$CURRENT_TAG")
           else
             CURRENT_ICA_VERSION=""
           fi
 
-          LATEST_ICA_VERSION=$(echo "$LATEST_TAG" | sed -nE 's/v(.+)/\1/p')
+          LATEST_ICA_VERSION=$(tweak_version "$LATEST_TAG")
 
-          echo "Current ICA version: $CURRENT_ICA_VERSION"
-          echo "Latest ICA version:  $LATEST_ICA_VERSION"
+          echo "Current tweak version: $CURRENT_ICA_VERSION"
+          echo "Latest tweak version:  $LATEST_ICA_VERSION"
 
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "Manual or workflow_call trigger - building"
@@ -196,7 +209,15 @@ jobs:
 
           curl -L "$DEB_URL" -o improvedcustomapi.deb
 
-          ICA_VERSION=$(echo "$RELEASE_TAG" | sed -nE 's/v(.+)/\1/p')
+          # Tweak (Apollo-Reborn) version = trailing `_`-separated token of the
+          # upstream tag, leading `v` stripped. Upstream now tags releases as
+          # `v<apollo>_<tweak>` (e.g. v1.15.11_3.0.0 -> 3.0.0); the legacy
+          # `v<tweak>` form (e.g. v2.14.0) has no underscore and passes through.
+          # Taking the whole post-`v` string here is what produced the doubled
+          # tag v1.15.11_1.15.11_3.0.0 and the non-SemVer CFBundleShortVersionString
+          # that broke SideStore update detection.
+          ICA_VERSION="${RELEASE_TAG#v}"
+          ICA_VERSION="${ICA_VERSION##*_}"
 
           echo "APOLLO_VERSION=${APOLLO_VERSION}" >> "$GITHUB_OUTPUT"
           echo "ICA_VERSION=$ICA_VERSION" >> "$GITHUB_OUTPUT"
@@ -334,7 +355,7 @@ jobs:
 
           {
             echo "Apollo version: \`v${APOLLO_VERSION}\`"
-            echo "ImprovedCustomApi version: \`${RELEASE_TAG}\`"
+            echo "Apollo-Reborn version: \`${RELEASE_TAG}\`"
             echo ""
             echo "## Release Notes"
             echo "$RELEASE_NOTES"
@@ -349,7 +370,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ steps.download-files.outputs.APOLLO_VERSION }}_${{ steps.download-files.outputs.ICA_VERSION }}
-          name: Apollo v${{ steps.download-files.outputs.APOLLO_VERSION }} with ImprovedCustomApi v${{ steps.download-files.outputs.ICA_VERSION }}
+          name: Apollo v${{ steps.download-files.outputs.APOLLO_VERSION }} with Apollo-Reborn v${{ steps.download-files.outputs.ICA_VERSION }}
           body_path: RELEASE_NOTES.md
           files: |
             ${{ steps.download-files.outputs.OUTPUT_NAME }}/${{ steps.download-files.outputs.OUTPUT_NAME }}.ipa

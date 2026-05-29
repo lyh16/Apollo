@@ -9,12 +9,51 @@ This fork of [Balackburn/Apollo](https://github.com/Balackburn/Apollo) automatic
 
 The Dystopia spoof lets you use Apollo without creating your own Reddit API key, by piggybacking on Dystopia's free accessibility API deal with Reddit. Based on the [patcheddit](https://github.com/wchill/patcheddit) method, [guide by u/Ill-Economist-5285](https://www.reddit.com/r/apollosideloaded/comments/1r864m7/).
 
+## Cast of characters (who's who)
+
+The repo names overlap and get confusing after a while. There are **two separate lineages** that braid together:
+
+**① The tweak** — *what makes a frozen Apollo work again* (your own API key, Ultra, etc.). One evolving project, renamed twice:
+
+```
+EthanArbuckle/Apollo-CustomApiCredentials   (original proof of concept)
+        ↓ enhanced & maintained by JeffreyCA
+JeffreyCA/Apollo-ImprovedCustomApi  ==  "ICA"  ==  "ImprovedCustomApi"
+        ↓ rebranded 2026-05-22 (v3.0.0) into a community org
+Apollo-Reborn/Apollo-Reborn   (JeffreyCA, icpryde, jordanearle, nickclyde, DeltAndy123)
+```
+
+So **ICA = ImprovedCustomApi = "JeffreyCA's tweak" = Apollo-Reborn** — the same thing across time. Whenever you see any of those names, it means *the tweak*.
+
+**② The packaging** — *how it gets installed* (frozen Apollo IPA + tweak, signed, published as a SideStore source):
+
+```
+Balackburn/Apollo   (long-running community build pipeline + AltStore source)
+        ↓ forked, adding the Dystopia spoof + App Group fix
+lyh16/Apollo   (this repo)
+```
+
+**How they combine each build:**
+
+```
+frozen Apollo 1.15.11 base IPA   (Christian Selig's last release — never changes)
+  +  latest tweak .deb           (downloaded from Apollo-Reborn releases)
+  +  Dystopia patches            (URL scheme + App Group fix, dystopia-patch.sh)
+  →  4 signed IPAs + apps*.json   (this repo's SideStore source)
+```
+
+The only moving part between releases is the **tweak version**. This repo **never clones Apollo-Reborn** — it just downloads the latest released `.deb` via the API (`GITHUB_API_URL`). The only repo you clone/edit is `lyh16/Apollo` itself.
+
+> One-liner: **Apollo-Reborn makes Apollo work; Balackburn (→ this fork) makes it installable.**
+>
+> Note: `lyh16/Apollo` is a GitHub *fork* of `Balackburn/Apollo` but has diverged into effectively a hard fork. Don't "Sync fork" — Balackburn's pipeline currently carries the same version bug this fork fixed.
+
 ## How the automation works
 
 ```
-JeffreyCA/Apollo-ImprovedCustomApi pushes a new tweak release
+Apollo-Reborn/Apollo-Reborn pushes a new tweak release
   → This fork's cron job (every 6 hours) detects new release
-    → Downloads base Apollo 1.15.11 IPA + ImprovedCustomApi .deb
+    → Downloads base Apollo 1.15.11 IPA + Apollo-Reborn .deb
     → cyan injects the tweak into the IPA
     → dystopia-patch.sh adds URL scheme + fixes App Group entitlements
     → Builds 4 IPA variants (standard, GLASS, no-ext, no-ext+GLASS)
