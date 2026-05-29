@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       apollo_ipa_url:
-        description: 'Apollo .ipa URL'
+        description: 'Apollo .ipa URL (defaults to the base 1.15.11 IPA hosted on this repo)'
         required: false
-        default: 'https://files.catbox.moe/o2lue0.ipa'
+        default: 'https://github.com/lyh16/Apollo/releases/download/base-ipa/base-apollo-1.15.11.ipa'
       catbox_upload:
         description: 'Upload to Catbox.moe'
         type: boolean
@@ -21,7 +21,11 @@ permissions:
 
 env:
   PYTHON_VERSION: '3.13'
-  APOLLO_IPA_URL: ${{ inputs.apollo_ipa_url || 'https://files.catbox.moe/o2lue0.ipa' }}
+  # Base Apollo 1.15.11 IPA (frozen). Mirrored off the ephemeral catbox.moe host
+  # to a prerelease asset on this repo (tag `base-ipa`) so builds no longer break
+  # if the free host purges the file. The asset name (base-*) is deliberately
+  # outside the Apollo/NO-EXTENSIONS/GLASS prefixes so update_json.py ignores it.
+  APOLLO_IPA_URL: ${{ inputs.apollo_ipa_url || 'https://github.com/lyh16/Apollo/releases/download/base-ipa/base-apollo-1.15.11.ipa' }}
   CATBOX_UPLOAD: ${{ inputs.catbox_upload == 'false' }}
   # Upstream tweak. Formerly JeffreyCA/Apollo-ImprovedCustomApi; as of 2026-05-22
   # it rebranded to the community-maintained Apollo-Reborn/Apollo-Reborn org.
