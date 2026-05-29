@@ -12,9 +12,9 @@ The Dystopia spoof lets you use Apollo without creating your own Reddit API key,
 ## How the automation works
 
 ```
-JeffreyCA/Apollo-ImprovedCustomApi pushes a new tweak release
+Apollo-Reborn/Apollo-Reborn pushes a new tweak release
   → This fork's cron job (every 6 hours) detects new release
-    → Downloads base Apollo 1.15.11 IPA + ImprovedCustomApi .deb
+    → Downloads base Apollo 1.15.11 IPA + Apollo-Reborn .deb
     → cyan injects the tweak into the IPA
     → dystopia-patch.sh adds URL scheme + fixes App Group entitlements
     → Builds 4 IPA variants (standard, GLASS, no-ext, no-ext+GLASS)
