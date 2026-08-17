@@ -8,6 +8,10 @@ on:
         description: 'Apollo .ipa URL (defaults to the base 1.15.11 IPA hosted on this repo)'
         required: false
         default: 'https://github.com/lyh16/Apollo/releases/download/base-ipa/base-apollo-1.15.11.ipa'
+      catbox_upload:
+        description: 'Upload built IPAs to Catbox.moe and list the mirror URLs in the job summary'
+        type: boolean
+        default: false
       sync_catalogs_only:
         description: 'Skip the build and only re-sync the source JSONs against existing releases'
         type: boolean
@@ -26,6 +30,10 @@ env:
   # if the free host purges the file. The asset name (base-*) is deliberately
   # outside the Apollo/NO-EXTENSIONS/GLASS prefixes so update_json.py ignores it.
   APOLLO_IPA_URL: ${{ inputs.apollo_ipa_url || 'https://github.com/lyh16/Apollo/releases/download/base-ipa/base-apollo-1.15.11.ipa' }}
+  # Boolean inputs render as 'true'/'false' (empty on schedule/workflow_call).
+  # The previous gate compared the boolean against the string 'false', which
+  # GitHub expressions never evaluate true, so the upload step was dead code.
+  CATBOX_UPLOAD: ${{ inputs.catbox_upload }}
   # Upstream tweak. Formerly JeffreyCA/Apollo-ImprovedCustomApi; as of 2026-05-22
   # it rebranded to the community-maintained Apollo-Reborn/Apollo-Reborn org.
   # The old path still 301-redirects here, but we point at the canonical repo
@@ -383,6 +391,43 @@ jobs:
             ${{ steps.download-files.outputs.OUTPUT_NAME }}/GLASS_${{ steps.download-files.outputs.OUTPUT_NAME }}.ipa
             NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}/NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}.ipa
             NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}/NO-EXTENSIONS_GLASS_${{ steps.download-files.outputs.OUTPUT_NAME }}.ipa
+
+      - name: Upload to catbox
+        if: env.CATBOX_UPLOAD == 'true'
+        env:
+          OUTPUT_NAME: ${{ steps.download-files.outputs.OUTPUT_NAME }}
+          APOLLO_VERSION: ${{ steps.download-files.outputs.APOLLO_VERSION }}
+          ICA_VERSION: ${{ steps.download-files.outputs.ICA_VERSION }}
+        run: |
+          set -euo pipefail
+          if [ -z "${APOLLO_VERSION}" ] || [ -z "${ICA_VERSION}" ]; then
+            echo "Error: Missing required information for uploading to Catbox!"
+            exit 1
+          fi
+
+          # Catbox's API returns the bare file URL on success and an error
+          # string otherwise (still HTTP 200), so validate the body shape.
+          upload() {
+            local file="$1" url
+            url=$(curl -sS -F "reqtype=fileupload" -F "fileToUpload=@${file}" https://catbox.moe/user/api.php)
+            case "$url" in
+              https://*) printf '%s' "$url" ;;
+              *) echo "::error::Catbox upload failed for ${file}: ${url}" >&2; return 1 ;;
+            esac
+          }
+
+          CATBOX_URL=$(upload "${OUTPUT_NAME}/${OUTPUT_NAME}.ipa")
+          CATBOX_URL_GLASS=$(upload "${OUTPUT_NAME}/GLASS_${OUTPUT_NAME}.ipa")
+          CATBOX_URL_NO_EXT=$(upload "NO-EXTENSIONS_${OUTPUT_NAME}/NO-EXTENSIONS_${OUTPUT_NAME}.ipa")
+          CATBOX_URL_NO_EXT_GLASS=$(upload "NO-EXTENSIONS_${OUTPUT_NAME}/NO-EXTENSIONS_GLASS_${OUTPUT_NAME}.ipa")
+
+          {
+            echo "### 📦 Catbox mirrors"
+            echo "- Standard: ${CATBOX_URL}"
+            echo "- GLASS: ${CATBOX_URL_GLASS}"
+            echo "- NO-EXTENSIONS: ${CATBOX_URL_NO_EXT}"
+            echo "- NO-EXTENSIONS GLASS: ${CATBOX_URL_NO_EXT_GLASS}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Update source files
         env:
