@@ -8,8 +8,8 @@ on:
         description: 'Apollo .ipa URL (defaults to the base 1.15.11 IPA hosted on this repo)'
         required: false
         default: 'https://github.com/lyh16/Apollo/releases/download/base-ipa/base-apollo-1.15.11.ipa'
-      catbox_upload:
-        description: 'Upload to Catbox.moe'
+      sync_catalogs_only:
+        description: 'Skip the build and only re-sync the source JSONs against existing releases'
         type: boolean
         default: false
   schedule:
@@ -26,7 +26,6 @@ env:
   # if the free host purges the file. The asset name (base-*) is deliberately
   # outside the Apollo/NO-EXTENSIONS/GLASS prefixes so update_json.py ignores it.
   APOLLO_IPA_URL: ${{ inputs.apollo_ipa_url || 'https://github.com/lyh16/Apollo/releases/download/base-ipa/base-apollo-1.15.11.ipa' }}
-  CATBOX_UPLOAD: ${{ inputs.catbox_upload == 'false' }}
   # Upstream tweak. Formerly JeffreyCA/Apollo-ImprovedCustomApi; as of 2026-05-22
   # it rebranded to the community-maintained Apollo-Reborn/Apollo-Reborn org.
   # The old path still 301-redirects here, but we point at the canonical repo
@@ -133,7 +132,10 @@ jobs:
           echo "Current tweak version: $CURRENT_ICA_VERSION"
           echo "Latest tweak version:  $LATEST_ICA_VERSION"
 
-          if [ "${{ github.event_name }}" != "schedule" ]; then
+          if [ "${{ inputs.sync_catalogs_only }}" = "true" ]; then
+            echo "sync_catalogs_only requested - skipping build (sync-catalogs job will run)"
+            should_build=false
+          elif [ "${{ github.event_name }}" != "schedule" ]; then
             echo "Manual or workflow_call trigger - building"
             should_build=true
           elif [ -z "$CURRENT_ICA_VERSION" ]; then
@@ -382,27 +384,6 @@ jobs:
             NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}/NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}.ipa
             NO-EXTENSIONS_${{ steps.download-files.outputs.OUTPUT_NAME }}/NO-EXTENSIONS_GLASS_${{ steps.download-files.outputs.OUTPUT_NAME }}.ipa
 
-      - name: Upload to catbox
-        if: env.CATBOX_UPLOAD == 'true'
-        env:
-          OUTPUT_NAME: ${{ steps.download-files.outputs.OUTPUT_NAME }}
-        run: |
-          if [ -z "${APOLLO_VERSION}" ] || [ -z "${ICA_VERSION}" ]; then
-            echo "Error: Missing required information for uploading to Catbox!"
-            exit 1
-          fi
-
-          CATBOX_URL=$(curl -F "fileToUpload=@${OUTPUT_NAME}/${OUTPUT_NAME}.ipa" https://catbox.moe/user/api.php)
-          CATBOX_URL_GLASS=$(curl -F "fileToUpload=@${OUTPUT_NAME}/GLASS_${OUTPUT_NAME}.ipa" https://catbox.moe/user/api.php)
-
-          CATBOX_URL_NO_EXT=$(curl -F "fileToUpload=@NO-EXTENSIONS_${OUTPUT_NAME}/NO-EXTENSIONS_${OUTPUT_NAME}.ipa" https://catbox.moe/user/api.php)
-          CATBOX_URL_NO_EXT_GLASS=$(curl -F "fileToUpload=@NO-EXTENSIONS_${OUTPUT_NAME}/NO-EXTENSIONS_GLASS_${OUTPUT_NAME}}.ipa" https://catbox.moe/user/api.php)
-
-          echo "CATBOX_URL=${CATBOX_URL}" >> "$GITHUB_ENV"
-          echo "CATBOX_URL_GLASS=${CATBOX_URL_GLASS}" >> "$GITHUB_ENV"
-          echo "CATBOX_URL_NO_EXT=${CATBOX_URL_NO_EXT}" >> "$GITHUB_ENV"
-          echo "CATBOX_URL_NO_EXT_GLASS=${CATBOX_URL_NO_EXT_GLASS}" >> "$GITHUB_ENV"
-
       - name: Update source files
         env:
           RELEASE_TAG: ${{ steps.get-release.outputs.RELEASE_TAG }}
@@ -431,3 +412,41 @@ jobs:
           echo "### 📊 Workflow Summary" >> $GITHUB_STEP_SUMMARY
           echo "✅ New release created: v${{ steps.download-files.outputs.APOLLO_VERSION }}-${{ steps.download-files.outputs.ICA_VERSION }}" >> $GITHUB_STEP_SUMMARY
           echo "🔗 [View release](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.download-files.outputs.APOLLO_VERSION }}_${{ steps.download-files.outputs.ICA_VERSION }})" >> $GITHUB_STEP_SUMMARY
+
+  sync-catalogs:
+    # Self-heal for catalog drift: the build job publishes the release BEFORE
+    # committing the regenerated source JSONs, and the two steps aren't atomic.
+    # If the JSON commit ever fails after the release goes up, later scheduled
+    # runs see "release already built", skip, and the catalogs stay stale
+    # forever. update_json.py regenerates all four catalogs deterministically
+    # from this repo's releases, so whenever the build is skipped we re-run it
+    # and commit only if anything drifted (normally a ~30s no-op).
+    needs: check-new-release
+    if: needs.check-new-release.outputs.should_build == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Setup python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Regenerate catalogs and commit any drift
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          pip install requests
+          python update_json.py
+
+          git add apps.json apps_noext.json apps_glass.json apps_noext_glass.json
+          if git diff --cached --quiet; then
+            echo "Catalogs already in sync with releases."
+          else
+            git config user.name 'GitHub Action'
+            git config user.email 'action@github.com'
+            git commit -m "fix(catalogs): re-sync source JSONs with published releases"
+            git push origin main || (git pull --rebase origin main && git push origin main)
+          fi
